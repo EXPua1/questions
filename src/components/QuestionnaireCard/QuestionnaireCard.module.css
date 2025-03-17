@@ -1,0 +1,33 @@
+.card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+  position: relative;
+  height: 200px;
+}
+
+.question {
+  color: blue;
+}
+.actionMenu{
+ position: absolute; 
+    top: 0; 
+    right: 0; 
+    z-index: 1000; 
+}
+.actionButton{
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  cursor: pointer;
+  background-color: transparent;
+  font-size: 10px;
+  
+}
+.actionButton:hover{
+  border-color: none;
+}
