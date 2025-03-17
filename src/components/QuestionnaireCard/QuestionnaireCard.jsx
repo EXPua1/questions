@@ -10,7 +10,7 @@ const QuestionnaireCard = ({ id, name, description, questionCount, completions, 
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            // Проверяем, был ли клик вне меню или кнопки
+           
             if (menuRef.current && !menuRef.current.contains(event.target) &&
                 buttonRef.current && !buttonRef.current.contains(event.target)) {
                 setShowActions(false);

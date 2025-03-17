@@ -1,19 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
-const mockData = {
-  1: {
-    id: 1,
-    name: 'Quiz 1',
-    description: 'First quiz',
-    questions: [
-      { type: 'text', text: 'What is your name?' },
-      { type: 'single', text: 'Favorite color?', options: ['Red', 'Blue'] },
-      { type: 'multiple', text: 'Hobbies?', options: ['Reading', 'Gaming'] },
-    ],
-    completions: 0,
-  },
-};
+import { fetchQuezzById } from '../../api/api';
 
 const QuestionnaireBuilder = () => {
   const { id } = useParams();
@@ -21,15 +8,29 @@ const QuestionnaireBuilder = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([]);
+  const [questionnaire, setQuestionnaire] = useState(null);
 
   useEffect(() => {
     if (id) {
-      const questionnaire = mockData[id];
-      if (questionnaire) {
-        setName(questionnaire.name);
-        setDescription(questionnaire.description);
-        setQuestions(questionnaire.questions);
-      }
+      const fetchById = async () => {
+        try {
+          const response = await fetchQuezzById(id);
+          console.log('Fetched data:', response); 
+          if (response) {
+            setQuestionnaire(response);
+            setName(response.name);
+            setDescription(response.description);
+            setQuestions(response.questions || []); 
+          } else {
+            console.log('Questionnaire not found');
+            setQuestionnaire(null); 
+          }
+        } catch (error) {
+          console.error('Error fetching questionnaire:', error);
+          setQuestionnaire(null);
+        }
+      };
+      fetchById();
     }
   }, [id]);
 
@@ -47,15 +48,10 @@ const QuestionnaireBuilder = () => {
     const newQuestions = [...questions];
     newQuestions[index].type = type;
 
-    // Обработка типа вопроса
     if (type === 'text') {
-      // Если тип вопроса "text", очищаем options, если они есть
       newQuestions[index].options = [];
-    } else if (type !== 'text') {
-      // Если тип не "text", но options ещё не существует, создаем пустой массив
-      if (!newQuestions[index].options) {
-        newQuestions[index].options = ['']; // Начальная опция для выбора
-      }
+    } else if (!newQuestions[index].options || newQuestions[index].options.length === 0) {
+      newQuestions[index].options = [''];
     }
 
     setQuestions(newQuestions);
@@ -79,42 +75,37 @@ const QuestionnaireBuilder = () => {
   };
 
   const handleSubmit = () => {
-    // Проверка на пустые значения
     if (!name || !description || questions.some(q => !q.text)) {
       alert('Please fill in all fields');
       return;
     }
 
-    // Если у вопроса с типом "single" или "multiple" нет вариантов, показать ошибку
-    const invalidQuestion = questions.find(q => {
-      return (q.type !== 'text' && q.options.length === 0);
-    });
-
+    const invalidQuestion = questions.find(q => q.type !== 'text' && q.options.length === 0);
     if (invalidQuestion) {
-      alert('Please add options for all choice-based questions.');
+      alert('Please add options for all choice-based questions');
       return;
     }
 
-    const questionnaire = {
-      id: id ? Number(id) : Date.now(),
+    const updatedQuestionnaire = {
+      _id: id || undefined, 
       name,
       description,
       questions,
-      completions: id ? mockData[id].completions : 0,
+      completions: questionnaire ? questionnaire.completions : 0,
     };
 
-    console.log('Questionnaire to send to backend:', questionnaire);
-
+    console.log('Questionnaire to send to server:', updatedQuestionnaire);
     navigate('/');
   };
 
   return (
     <div>
-      <h2>{id ? 'Edit' : 'Create'} Quiz</h2>
+      <h2>{id ? 'Edit Questionnaire' : 'Create Questionnaire'}</h2>
+      {id && !questionnaire && <p>Loading or questionnaire not found...</p>}
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Quiz Name"
+        placeholder="Questionnaire Name"
         style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
       />
       <textarea
@@ -129,7 +120,7 @@ const QuestionnaireBuilder = () => {
           <input
             value={q.text}
             onChange={(e) => updateQuestion(index, 'text', e.target.value)}
-            placeholder="Question"
+            placeholder="Question Text"
             style={{ width: '40%', marginRight: '10px', padding: '5px' }}
           />
           <select
@@ -142,11 +133,11 @@ const QuestionnaireBuilder = () => {
             <option value="multiple">Multiple Choice</option>
           </select>
           <button onClick={() => removeQuestion(index)} style={{ padding: '5px' }}>
-            Remove
+            Remove Question
           </button>
           {q.type !== 'text' && (
             <div style={{ marginTop: '10px' }}>
-              <h4>Answers</h4>
+              <h4>Options</h4>
               {q.options.map((opt, optIndex) => (
                 <div key={optIndex} style={{ marginBottom: '5px' }}>
                   <input
@@ -156,16 +147,16 @@ const QuestionnaireBuilder = () => {
                       newQuestions[index].options[optIndex] = e.target.value;
                       setQuestions(newQuestions);
                     }}
-                    placeholder={`Choice ${optIndex + 1}`}
+                    placeholder={`Option ${optIndex + 1}`}
                     style={{ width: '40%', marginRight: '10px', padding: '5px' }}
                   />
                   <button onClick={() => removeOption(index, optIndex)} style={{ padding: '5px' }}>
-                    Remove
+                    Remove Option
                   </button>
                 </div>
               ))}
               <button onClick={() => addOption(index)} style={{ padding: '5px', marginTop: '5px' }}>
-                Add Choice
+                Add Option
               </button>
             </div>
           )}

@@ -1,41 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { fetchQuezzById } from '../../api/api';
 
-const mockData = {
-    1: {
-        id: 1,
-        name: 'Quiz 1',
-        description: 'First quiz',
-        questions: [
-            { type: 'text', text: 'What is your name?' },
-            { type: 'single', text: 'Favorite color?', options: ['Red', 'Blue'] },
-            { type: 'multiple', text: 'Hobbies?', options: ['Reading', 'Gaming'] },
-        ],
-        completions: 0,
-    },
-    2: {
-        id: 2,
-        name: 'Quiz 2',
-        description: 'Second quiz',
-        questions: [
-            { type: 'text', text: 'What is your name?' },
-            { type: 'single', text: 'Favorite color?', options: ['Red', 'Blue'] },
-            { type: 'multiple', text: 'Hobbies?', options: ['Reading', 'Gaming'] },
-        ],
-        completions: 0,
-    },
-    3: {
-        id: 3,
-        name: 'Quiz 3',
-        description: 'Third quiz',
-        questions: [
-            { type: 'text', text: 'What is your name?' },
-            { type: 'single', text: 'Favorite color?', options: ['Red', 'Blue'] },
-            { type: 'multiple', text: 'Hobbies?', options: ['Reading', 'Gaming'] },
-        ],
-        completions: 0,
-    },
-};
+
 
 const Run = () => {
     const { id } = useParams();
@@ -46,45 +13,69 @@ const Run = () => {
     const [elapsedTime, setElapsedTime] = useState(0);
     const [isCompleted, setIsCompleted] = useState(false);
 
-    // Загружаем анкету из mockData (позже заменим на API)
+   
     useEffect(() => {
-        setQuestionnaire(mockData[id]);
+        const fetchById = async () => {
+            try {
+                const response = await fetchQuezzById(id);
+                console.log('Fetched data:', response); 
+                setQuestionnaire(response); 
+            } catch (error) {
+                console.error('Error fetching questionnaire:', error);
+                setQuestionnaire(null); 
+            }
+        };
+        fetchById();
     }, [id]);
 
-    // Таймер в реальном времени
+ 
     useEffect(() => {
         if (!isCompleted) {
             const timer = setInterval(() => {
                 setElapsedTime(((Date.now() - startTime) / 1000).toFixed(0));
-            }, 1000); // Обновление каждую секунду (было 100 мс, но ты указал 1000)
+            }, 1000);
             return () => clearInterval(timer);
         }
-    }, [startTime, isCompleted]);
+    }, [isCompleted]);
 
-    const handleAnswerChange = (index, value) => {
-        const questionType = questionnaire.questions[index].type; // Получаем тип вопроса
-        // Фильтруем пустые текстовые ответы
-        if (questionType === 'text' && value.trim() === '') {
-            const { [index]: _, ...rest } = answers; // Удаляем пустой ответ
-            setAnswers(rest);
-        } else {
-            setAnswers({ ...answers, [index]: value });
-        }
+    const handleAnswerChange = (index, value, isCheckbox = false) => {
+        if (!questionnaire) return;
+
+        const questionType = questionnaire.questions[index].type;
+
+        setAnswers(prev => {
+            if (questionType === 'multiple') {
+                const current = prev[index] || [];
+                return {
+                    ...prev,
+                    [index]: isCheckbox
+                        ? value.checked
+                            ? [...current, value.value]  
+                            : current.filter(a => a !== value.value)  
+                        : value,
+                };
+            } else if (questionType === 'text' && value.trim() === '') {
+                const { [index]: _, ...rest } = prev;
+                return rest; 
+            } else {
+                return { ...prev, [index]: value };
+            }
+        });
     };
 
     const handleSubmit = () => {
         const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
         const response = {
-            questionnaireId: Number(id),
+            questionnaireId: id, 
             answers,
             timeTaken,
             completedAt: Date.now(),
         };
 
-        // Здесь будет вызов API для сохранения в базу данных
+       
         console.log('Response to send to backend:', response);
 
-        // Увеличиваем completions локально (позже это будет на бэкенде)
+       
         setQuestionnaire(prev => ({
             ...prev,
             completions: prev.completions + 1,
@@ -93,7 +84,7 @@ const Run = () => {
         setIsCompleted(true);
     };
 
-    // Проверяем, есть ли хотя бы один ответ
+
     const isSubmitDisabled = Object.keys(answers).length === 0;
 
     if (!questionnaire) return <div>Loading...</div>;
@@ -104,7 +95,7 @@ const Run = () => {
             <p>{questionnaire.description}</p>
 
             {!isCompleted ? (
-                // Форма прохождения анкеты с таймером
+               
                 <>
                     <p>Elapsed Time: {elapsedTime} seconds</p> {/* Видимый таймер */}
                     {questionnaire.questions.map((q, index) => (
@@ -150,7 +141,7 @@ const Run = () => {
                     </button>
                 </>
             ) : (
-                // Результаты после завершения
+              
                 <div>
                     <h3>Your Results</h3>
                     <p>Time Taken: {((Date.now() - startTime) / 1000).toFixed(2)} seconds</p>
