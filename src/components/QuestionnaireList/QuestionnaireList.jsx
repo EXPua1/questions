@@ -1,35 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import QuestionnaireCard from '../QuestionnaireCard/QuestionnaireCard';
 import css from './QuestionnaireList.module.css';
+import { deleteQuestionnaire } from '../../api/api';
 
-
-
-const QuestionnaireList = ({ questionnaires }) => {
-    // const [questionnaires, setQuestionnaires] = useState([]);
-
-    // useEffect(() => {
-    //     // Загружаем начальные данные (позже заменим на API)
-    //     setQuestionnaires(Object.values(mockData));
-    // }, []);
-
-    // const handleDelete = (id) => {
-    //     setQuestionnaires(questionnaires.filter(q => q.id !== id));
-    // };
+const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
+    const handleDelete = async (id) => {
+        try {
+            await deleteQuestionnaire(id);
+            onQuestionnaireDelete(id); 
+        } catch (error) {
+            console.error('Error deleting questionnaire:', error);
+            alert('Failed to delete questionnaire');
+        }
+    };
 
     return (
-        <div
-
-        >
+        <div>
             <h2>Questionnaire Catalog</h2>
+            <Link to="/create">
+                <button style={{ marginBottom: '10px' }}>Create New Questionnaire</button>
+            </Link>
             <div className={css.list}>
-                <Link to="/create">
-                    <button style={{ marginBottom: '10px' }}>Create New Questionnaire</button>
-                </Link>
+               
                 {questionnaires.length === 0 ? (
                     <p>No questionnaires available.</p>
                 ) : (
-                    questionnaires.map(q => (
+                    questionnaires.map((q) => (
                         <QuestionnaireCard
                             key={q._id}
                             id={q._id}
@@ -37,12 +34,11 @@ const QuestionnaireList = ({ questionnaires }) => {
                             description={q.description}
                             questionCount={q.questions.length}
                             completions={q.completions}
-                        // onDelete={handleDelete}
+                            onDelete={handleDelete}
                         />
                     ))
                 )}
             </div>
-
         </div>
     );
 };

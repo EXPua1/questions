@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import css from './ActionMenu.module.css';
 const ActionMenu = ({ id, onDelete, onClose }) => {
+    console.log(onDelete)
     return (
         <div
             className={css.actionMenu}
