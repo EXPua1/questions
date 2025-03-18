@@ -43,6 +43,10 @@ const QuestionnaireCard = ({ id, name, description, questionCount, completions, 
             <div>
                 <h3>{name}</h3>
                 <p>{description}</p>
+                
+            </div>
+            <div>
+                <p>Completed - {completions} times</p>
             </div>
             <p>Questions: {questionCount}</p>
         </div>

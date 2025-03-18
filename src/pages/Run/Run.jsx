@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { fetchQuezzById } from '../../api/api';
+import { completeQuestionnaire, fetchQuezzById } from '../../api/api';
 import Container from '../../components/Container/Container';
 import css from './Run.module.css'; // Подключаем CSS-модуль
 
@@ -56,11 +56,17 @@ const Run = () => {
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const timeTaken = ((Date.now() - startTime) / 1000).toFixed(2);
         console.log('Response:', { questionnaireId: id, answers, timeTaken });
 
-        setIsCompleted(true);
+        try {
+            await completeQuestionnaire(id); 
+            setIsCompleted(true); 
+        } catch (error) {
+            console.error('Error submitting questionnaire:', error);
+            alert('Failed to submit questionnaire');
+        }
     };
 
     const isSubmitDisabled = Object.keys(answers).length === 0;

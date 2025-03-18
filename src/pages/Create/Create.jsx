@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchQuezzById, createQuestionnaire, updateQuestionnaire } from '../../api/api';
 import Container from '../../components/Container/Container';
+import styles from './Create.module.css';  
 
-const QuestionnaireBuilder = () => {
+const Create = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -124,54 +125,58 @@ const QuestionnaireBuilder = () => {
 
   return (
     <Container>
-      <div>
+      <div className={styles.container}>
         <h2>{id ? 'Edit Questionnaire' : 'Create Questionnaire'}</h2>
         {loading && <p>{id ? 'Loading...' : 'Saving...'}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {id && !questionnaire && !loading && <p>Questionnaire not found</p>}
         <input
+          className={styles.inputField}
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Questionnaire Name"
-          style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
           disabled={loading}
         />
         <textarea
+          className={styles.inputField}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Description"
-          style={{ width: '100%', marginBottom: '10px', padding: '5px' }}
           disabled={loading}
         />
         <h3>Questions</h3>
         {questions.map((q, index) => (
-          <div key={index} style={{ marginBottom: '10px', border: '1px solid #ccc', padding: '10px' }}>
+          <div className={styles.questionContainer} key={index}>
             <input
+              className={styles.inputField}
               value={q.text}
               onChange={(e) => updateQuestion(index, 'text', e.target.value)}
               placeholder="Question Text"
-              style={{ width: '40%', marginRight: '10px', padding: '5px' }}
               disabled={loading}
             />
-            <select
-              value={q.type}
-              onChange={(e) => updateQuestionType(index, e.target.value)}
-              style={{ width: '20%', marginRight: '10px', padding: '5px' }}
-              disabled={loading}
-            >
-              <option value="text">Text</option>
-              <option value="single">Single Choice</option>
-              <option value="multiple">Multiple Choice</option>
-            </select>
-            <button onClick={() => removeQuestion(index)} style={{ padding: '5px' }} disabled={loading}>
-              Remove Question
-            </button>
+            <div className={styles.questionType}>
+              <select
+                className={styles.inputField_First}
+                value={q.type}
+                onChange={(e) => updateQuestionType(index, e.target.value)}
+                disabled={loading}
+              >
+                <option value="text">Text</option>
+                <option value="single">Single Choice</option>
+                <option value="multiple">Multiple Choice</option>
+              </select>
+              <button className={styles.button} onClick={() => removeQuestion(index)} disabled={loading}>
+                Remove Question
+              </button>
+            </div>
+            
             {q.type !== 'text' && (
-              <div style={{ marginTop: '10px' }}>
+              <div className={styles.options}>
                 <h4>Options</h4>
                 {q.options.map((opt, optIndex) => (
-                  <div key={optIndex} style={{ marginBottom: '5px' }}>
+                  <div key={optIndex}>
                     <input
+                      className={styles.inputField}
                       value={opt}
                       onChange={(e) => {
                         const newQuestions = [...questions];
@@ -179,31 +184,32 @@ const QuestionnaireBuilder = () => {
                         setQuestions(newQuestions);
                       }}
                       placeholder={`Option ${optIndex + 1}`}
-                      style={{ width: '40%', marginRight: '10px', padding: '5px' }}
                       disabled={loading}
                     />
-                    <button onClick={() => removeOption(index, optIndex)} style={{ padding: '5px' }} disabled={loading}>
+                    <button className={styles.optionButton} onClick={() => removeOption(index, optIndex)} disabled={loading}>
                       Remove Option
                     </button>
                   </div>
                 ))}
-                <button onClick={() => addOption(index)} style={{ padding: '5px', marginTop: '5px' }} disabled={loading}>
+                <button className={styles.optionButton} onClick={() => addOption(index)} disabled={loading}>
                   Add Option
                 </button>
               </div>
             )}
           </div>
         ))}
-        <button onClick={addQuestion} style={{ padding: '5px', marginTop: '10px' }} disabled={loading}>
-          Add Question
-        </button>
-        <button onClick={handleSubmit} style={{ padding: '5px', marginTop: '10px' }} disabled={loading}>
-          {id ? 'Update' : 'Save'}
-        </button>
+        <div className={styles.buttonContainerInner}>
+          <button className={styles.button} onClick={addQuestion} disabled={loading}>
+            Add Question
+          </button>
+          <button className={styles.button} onClick={handleSubmit} disabled={loading}>
+            {id ? 'Update' : 'Save'}
+          </button>
+        </div>
+        
       </div>
     </Container>
-
   );
 };
 
-export default QuestionnaireBuilder;
+export default Create;
