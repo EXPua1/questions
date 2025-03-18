@@ -2,17 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import css from './ActionMenu.module.css';
 const ActionMenu = ({ id, onDelete, onClose }) => {
-    console.log(onDelete)
+
     return (
         <div
             className={css.actionMenu}
-           
+
         >
             <Link to={`/edit/${id}`} style={{ display: 'block', margin: '2px 0' }} onClick={onClose}>
-               Edit
+                Edit
             </Link>
             <Link className={css.run} to={`/run/${id}`} style={{ display: 'block', margin: '2px 0' }} onClick={onClose}>
-               Run
+                Run
             </Link>
             <button className={css.actionButton} onClick={() => { onDelete(id); onClose(); }} style={{ margin: '2px 0' }}>
                 Delete
