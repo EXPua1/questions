@@ -1,0 +1,48 @@
+/* reset.css */
+
+/* Сброс основных элементов */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 100%;
+}
+
+/* Убираем дефолтные стили для списков */
+ol, ul {
+  list-style: none;
+}
+
+/* Сбрасываем дефолтные отступы у блоков */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+/* Сбрасываем стили для ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Сбрасываем стили для таблиц */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+
+
+input, select, textarea {
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+html, body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+}

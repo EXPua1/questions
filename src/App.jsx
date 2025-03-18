@@ -1,6 +1,7 @@
 
 import { Route, Routes } from 'react-router-dom'
 import './App.css'
+import './reset.css'
 import HomePage from './pages/HomePage/HomePage'
 import Create from './pages/Create/Create'
 import Container from './components/Container/Container'

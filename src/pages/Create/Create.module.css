@@ -96,7 +96,7 @@ h2 {
 }
 
 .questionContainer button {
-  background-color: #f44336;
+  background-color: #e43f33
 }
 
 .options {
@@ -108,7 +108,8 @@ h2 {
 }
 
 .optionButton {
-  background-color: #f44336;
+  background-color: #e43f33;
+  color:white
 }
 
 .options button {
