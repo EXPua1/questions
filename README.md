@@ -38,7 +38,7 @@ Navigate to the catalog page to view all questionnaires.
 Use the builder to create a new questionnaire with custom questions.
 Click "Run" on any questionnaire to complete it and see your results.
 
-Note: If the backend is inactive (e.g., running on a free hosting service), the first request may take up to 50 seconds due to server wake-up time.
+**Note:** If the backend is inactive (e.g., running on a free hosting service), the first request may take up to 50 seconds due to server wake-up time.
 
 
 ## Links
