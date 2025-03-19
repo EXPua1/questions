@@ -28,7 +28,7 @@
 
 .controls {
     display: flex;
-    gap: 10px; /* Расстояние между кнопкой и селектом */
+    gap: 10px; 
     margin-bottom: 20px;
    justify-content: space-between;
     align-items: baseline
