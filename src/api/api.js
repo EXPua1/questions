@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/quizzes";
+const API_URL = "https://questions-back-gyjw.onrender.com/api/quizzes";
 
 export const fetchQuestionnaires = async ({
   page = 1,
