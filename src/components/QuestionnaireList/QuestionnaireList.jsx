@@ -8,7 +8,7 @@ const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
     const handleDelete = async (id) => {
         try {
             await deleteQuestionnaire(id);
-            onQuestionnaireDelete(id); 
+            onQuestionnaireDelete(id);
         } catch (error) {
             console.error('Error deleting questionnaire:', error);
             alert('Failed to delete questionnaire');
@@ -19,10 +19,10 @@ const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
         <div>
             <h2>Questionnaire Catalog</h2>
             <Link to="/create">
-                <button style={{ marginBottom: '10px' }}>Create New Questionnaire</button>
+                <button className={css.button} >Create New Questionnaire</button>
             </Link>
             <div className={css.list}>
-               
+
                 {questionnaires.length === 0 ? (
                     <p>No questionnaires available.</p>
                 ) : (

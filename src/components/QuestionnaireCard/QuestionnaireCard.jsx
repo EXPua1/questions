@@ -10,7 +10,7 @@ const QuestionnaireCard = ({ id, name, description, questionCount, completions, 
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-           
+
             if (menuRef.current && !menuRef.current.contains(event.target) &&
                 buttonRef.current && !buttonRef.current.contains(event.target)) {
                 setShowActions(false);
@@ -33,7 +33,7 @@ const QuestionnaireCard = ({ id, name, description, questionCount, completions, 
                 className={css.actionButton}
                 onClick={() => setShowActions(!showActions)}
             >
-                <BsThreeDotsVertical size={20} />
+                <BsThreeDotsVertical size={20} fill="black" />
             </button>
             {showActions && (
                 <div className={css.actionMenu} ref={menuRef}>
@@ -41,14 +41,16 @@ const QuestionnaireCard = ({ id, name, description, questionCount, completions, 
                 </div>
             )}
             <div>
-                <h3>{name}</h3>
+                <h2>{name}</h2>
                 <p>{description}</p>
-                
+
             </div>
             <div>
-                <p>Completed - {completions} times</p>
+                <p>
+                    Completed: <span className={completions === 0 ? css.noCompletions : css.completions}>{completions}</span> times
+                </p>
             </div>
-            <p>Questions: {questionCount}</p>
+            <p className={css.questionCount}>Questions: {questionCount}</p>
         </div>
     );
 };
