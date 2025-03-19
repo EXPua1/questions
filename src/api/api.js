@@ -1,14 +1,25 @@
 import axios from "axios";
 
-const API_URL = "https://questions-back-gyjw.onrender.com/api/quizzes";
+const API_URL = "http://localhost:3000/api/quizzes";
 
-export const fetchQuestionnaires = async (page = 1, perPage) => {
- const url = perPage
-   ? `${API_URL}?page=${page}&perPage=${perPage}`
-   : `${API_URL}?page=${page}`;
+export const fetchQuestionnaires = async ({
+  page = 1,
+  perPage = 5, 
+  sortBy = "name", 
+  sortOrder = "asc", 
+} = {}) => {
+ 
+  const params = new URLSearchParams({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+  }).toString();
 
- const response = await axios.get(url);
-  return response.data.data;
+  const url = `${API_URL}?${params}`;
+
+  const response = await axios.get(url);
+  return response.data.data; 
 };
 
 export const fetchQuezzById = async (id) => {

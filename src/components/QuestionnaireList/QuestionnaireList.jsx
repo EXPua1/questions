@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import QuestionnaireCard from '../QuestionnaireCard/QuestionnaireCard';
 import css from './QuestionnaireList.module.css';
 import { deleteQuestionnaire } from '../../api/api';
 
-const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
-    const [sortBy, setSortBy] = useState('name');
-    const [sortOrder, setSortOrder] = useState('asc'); 
+const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete, onSortChange, currentSortBy, currentSortOrder }) => {
 
     const handleDelete = async (id) => {
         try {
@@ -18,23 +16,9 @@ const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
         }
     };
 
-    // Sorting function
-    const sortedQuestionnaires = [...questionnaires].sort((a, b) => {
-        let comparison = 0;
-        if (sortBy === 'name') {
-            comparison = a.name.localeCompare(b.name);
-        } else if (sortBy === 'questions') {
-            comparison = a.questions.length - b.questions.length;
-        } else if (sortBy === 'completions') {
-            comparison = a.completions - b.completions;
-        }
-        return sortOrder === 'asc' ? comparison : -comparison;
-    });
-
     const handleSortChange = (e) => {
         const [newSortBy, newSortOrder] = e.target.value.split(':');
-        setSortBy(newSortBy);
-        setSortOrder(newSortOrder);
+        onSortChange(newSortBy, newSortOrder);
     };
 
     return (
@@ -45,7 +29,7 @@ const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
                     <button className={css.button}>Create New Questionnaire</button>
                 </Link>
                 <select
-                    value={`${sortBy}:${sortOrder}`}
+                    value={`${currentSortBy}:${currentSortOrder}`}
                     onChange={handleSortChange}
                     className={css.sortSelect}
                 >
@@ -61,7 +45,7 @@ const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete }) => {
                 {questionnaires.length === 0 ? (
                     <p className={css.loading}>Loading...</p>
                 ) : (
-                    sortedQuestionnaires.map((q) => (
+                    questionnaires.map((q) => (
                         <QuestionnaireCard
                             key={q._id}
                             id={q._id}
