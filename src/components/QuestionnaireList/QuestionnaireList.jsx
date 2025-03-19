@@ -28,18 +28,23 @@ const QuestionnaireList = ({ questionnaires, onQuestionnaireDelete, onSortChange
                 <Link to="/create">
                     <button className={css.button}>Create New Questionnaire</button>
                 </Link>
-                <select
-                    value={`${currentSortBy}:${currentSortOrder}`}
-                    onChange={handleSortChange}
-                    className={css.sortSelect}
-                >
-                    <option value="name:asc">By Name (A-Z)</option>
-                    <option value="name:desc">By Name (Z-A)</option>
-                    <option value="questions:asc">By Questions (Ascending)</option>
-                    <option value="questions:desc">By Questions (Descending)</option>
-                    <option value="completions:asc">By Completions (Ascending)</option>
-                    <option value="completions:desc">By Completions (Descending)</option>
-                </select>
+                <div className={css.sort}>
+                    <h2 className={css.sortLabel}>Sort By</h2>
+                    <select
+                        value={`${currentSortBy}:${currentSortOrder}`}
+                        onChange={handleSortChange}
+                        className={css.sortSelect}
+                    >
+                        <option value="name:asc">Name (A-Z)</option>
+                        <option value="name:desc">Name (Z-A)</option>
+                        <option value="questions:asc">Questions (Ascending)</option>
+                        <option value="questions:desc">Questions (Descending)</option>
+                        <option value="completions:asc">Completions (Ascending)</option>
+                        <option value="completions:desc">Completions (Descending)</option>
+                    </select>
+                </div>
+               
+                
             </div>
             <div className={css.list}>
                 {questionnaires.length === 0 ? (

@@ -20,15 +20,18 @@
     align-self: center;
 }
 
+.sortLabel{
+    color: rgb(0, 123, 255);
+}
 
 
-/* QuestionnaireList.module.css */
+
 .controls {
     display: flex;
     gap: 10px; /* Расстояние между кнопкой и селектом */
     margin-bottom: 20px;
-    justify-content: center; /* Центрируем элементы */
-    align-items: center;
+   justify-content: space-between;
+    align-items: baseline
 }
 
 .button {
@@ -46,6 +49,12 @@
     background-color: #0056b3;
 }
 
+.sort{
+    display: flex;
+    align-items: start;
+   gap: 10px;
+}
+
 .sortSelect {
     padding: 8px 12px;
     font-size: 16px;
@@ -55,6 +64,9 @@
     cursor: pointer;
     display: flex;
     justify-content: space-between;
+    color: grey;
+    height: 38px;
+
 }
 
 
