@@ -1,6 +1,6 @@
 .list{
     display: flex;
-   
+    
     gap: 15px;
     flex-wrap: wrap;
     
@@ -10,3 +10,50 @@
     background-color: rgb(86, 86, 239);
     color: white;
 }
+.loading{
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 55px;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
+
+
+
+/* QuestionnaireList.module.css */
+.controls {
+    display: flex;
+    gap: 10px; /* Расстояние между кнопкой и селектом */
+    margin-bottom: 20px;
+    justify-content: center; /* Центрируем элементы */
+    align-items: center;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none; 
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.sortSelect {
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+

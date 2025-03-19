@@ -2,8 +2,12 @@ import axios from "axios";
 
 const API_URL = "https://questions-back-gyjw.onrender.com/api/quizzes";
 
-export const fetchQuestionnaires = async () => {
-  const response = await axios.get(API_URL);
+export const fetchQuestionnaires = async (page = 1, perPage) => {
+ const url = perPage
+   ? `${API_URL}?page=${page}&perPage=${perPage}`
+   : `${API_URL}?page=${page}`;
+
+ const response = await axios.get(url);
   return response.data.data;
 };
 
